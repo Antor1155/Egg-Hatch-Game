@@ -59,8 +59,18 @@ window.addEventListener("load", function(){
             // custom collision funciton to collision and obstacles
 
             this.game.obstacles.forEach(obstacle =>{
-                if(this.game.checkCollision(this, obstacle)){
-                    console.log("collision")
+                let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, obstacle)
+
+                if(collision){
+                    const unit_x = dx / distance;
+                    const unit_y = dy / distance;
+                    this.collisionX = obstacle.collisionX + (sumOfRadii + 1) * unit_x
+                    
+                    this.collisionY = obstacle.collisionY + (sumOfRadii + 1) * unit_y
+
+                    console.log(unit_x, unit_y, sumOfRadii)
+
+
                 }
             })
 
@@ -146,11 +156,11 @@ window.addEventListener("load", function(){
 
         checkCollision(a, b){
             const dx = a.collisionX - b.collisionX
-            const dY = a.collisionY - b.collisionY
-            const distance = Math.hypot(dY, dx)
+            const dy = a.collisionY - b.collisionY
+            const distance = Math.hypot(dy, dx)
             const sumOfRadii = a.collisionRadius + b.collisionRadius
 
-            return (distance < sumOfRadii)
+            return [(distance < sumOfRadii), distance, sumOfRadii, dx, dy]
         }
 
         init(){
