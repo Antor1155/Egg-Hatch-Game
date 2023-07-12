@@ -73,10 +73,12 @@ window.addEventListener("load", function(){
             this.height = this.spriteHeight
             this.spriteX = this.collisionX - this.width * 0.5
             this.spriteY = this.collisionY - this.height * 0.5 - 70
+            this.frameX = Math.floor(Math.random() * 4) 
+            this.frameY = Math.floor(Math.random() * 3) 
         }
 
         draw(context){
-            context.drawImage(this.image, 0, 0, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height)
+            context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height)
 
 
             context.beginPath();
@@ -95,6 +97,7 @@ window.addEventListener("load", function(){
             this.canvas = canvas
             this.width = this.canvas.width
             this.height = this.canvas.height
+            this.topmargin = 260
             this.player = new Player(this)
             this.numberOfObstacles = 5
             this.obstacles = []
@@ -144,16 +147,16 @@ window.addEventListener("load", function(){
                     const dx = testObstacle.collisionX - obstacle.collisionX;
                     const dy = testObstacle.collisionY - obstacle.collisionY; 
 
-                    
+                    const distanceBuffer = 150;
                     const distance = Math.hypot(dy, dx)
-                    const sumOfRadii = testObstacle.collisionRadius + obstacle.collisionRadius
+                    const sumOfRadii = testObstacle.collisionRadius + obstacle.collisionRadius + distanceBuffer
 
                     if (distance < sumOfRadii){
                         overlap = true
                     }
                 })
 
-                if (!overlap){
+                if (!overlap && testObstacle.spriteX > 0 && testObstacle.spriteX < this.width - testObstacle.width && testObstacle.collisionY > 260){
                     this.obstacles.push(testObstacle)
                 }
                 attempts++
