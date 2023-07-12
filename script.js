@@ -2,8 +2,8 @@ window.addEventListener("load", function(){
     const canvas =this.document.getElementById("canvas1")
     const ctx = canvas.getContext("2d")
     
-    canvas.width = 1280;
-    canvas.height = 720;
+    canvas.width = 1280
+    canvas.height = 720
     
     ctx.fillStyle = "white"
     ctx.lineWidth = 3;
@@ -36,11 +36,29 @@ window.addEventListener("load", function(){
             this.width = this.canvas.width
             this.height = this.canvas.height
             this.player = new Player(this)
+            this.mouse = {
+                x: this.width * 0.5,
+                y: this.width * 0.5,
+                pressed: false
+            }
 
             // any normal code here 
+            canvas.addEventListener("mousedown", e => {
+                this.mouse.x = e.offsetX
+                this.mouse.y = e.offsetY
+                this.mouse.pressed = true
 
-            window.addEventListener("mousedown", function(e){
-                console.log(e)
+            })
+
+            canvas.addEventListener("mouseup", e => {
+                this.mouse.x = e.offsetX
+                this.mouse.y = e.offsetY
+                this.mouse.pressed = false
+            })
+
+            canvas.addEventListener("mousemove", e => {
+                this.mouse.x = e.offsetX
+                this.mouse.y = e.offsetY
             })
         }
         // render a player 
