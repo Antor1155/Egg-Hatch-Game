@@ -28,6 +28,12 @@ window.addEventListener("load", function(){
             context.restore()
             context.stroke()
         }
+
+        update(){
+            this.collisionX = this.game.mouse.x
+            this.collisionY = this.game.mouse.y
+            this.collisionRadius = this.game.mouse.pressed ? 20 : 50
+        }
     }
 
     class Game {
@@ -64,11 +70,19 @@ window.addEventListener("load", function(){
         // render a player 
         render(context){
             this.player.draw(context)
-            
+            this.player.update()
         }
     }
 
     const game = new Game(canvas)
-    game.render(ctx)
-    console.log(game)
+
+    // infinite loop of animation function 
+    function animation(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        game.render(ctx)
+        
+        requestAnimationFrame(animation)
+    }
+
+    animation()
 })
