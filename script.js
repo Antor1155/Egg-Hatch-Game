@@ -16,7 +16,7 @@ window.addEventListener("load", function(){
            this.game = game
            this.collisionX = this.game.width * 0.5;
            this.collisionY = this.game.height * 0.5;
-           this.collisionRadius = 50
+           this.collisionRadius = 30
            this.speedX = 0
            this.speedY = 0
            this.speedModifier = 5
@@ -86,8 +86,18 @@ window.addEventListener("load", function(){
             this.spriteX = this.collisionX - this.width * 0.5
             this.spriteY = this.collisionY - this.height * 0.5 - 100
 
-            // custom collision funciton to collision and obstacles
+            // horizontal boundaries
+            if (this.collisionX < 0 + this.collisionRadius ){
+                this.collisionX = this.collisionRadius
+            } else if (this.collisionX > this.game.width - this.collisionRadius){
+                this.collisionX = this.game.width - this.collisionRadius
+            }
+            // vertical boundaries 
+            if (this.collisionY < this.game.topmargin){
+                this.collisionY = this.game.topmargin
+            }
 
+            // custom collision funciton to collision and obstacles
             this.game.obstacles.forEach(obstacle =>{
                 let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, obstacle)
 
@@ -142,7 +152,7 @@ window.addEventListener("load", function(){
             this.canvas = canvas
             this.width = this.canvas.width
             this.height = this.canvas.height
-            this.topmargin = 260
+            this.topmargin = 240
             this.debug = true
             this.player = new Player(this)
             this.numberOfObstacles = 5
@@ -182,7 +192,7 @@ window.addEventListener("load", function(){
         // render a player 
         render(context){
             this.obstacles.forEach( obstacle=>obstacle.draw(context) )
-            
+
             this.player.draw(context)
             this.player.update()
 
@@ -217,7 +227,7 @@ window.addEventListener("load", function(){
                     }
                 })
 
-                if (!overlap && testObstacle.spriteX > 0 && testObstacle.spriteX < this.width - testObstacle.width && testObstacle.collisionY > 260){
+                if (!overlap && testObstacle.spriteX > 0 && testObstacle.spriteX < this.width - testObstacle.width && testObstacle.collisionY >= this.topmargin + this.player.collisionRadius + testObstacle.collisionRadius){
                     this.obstacles.push(testObstacle)
                 }
                 attempts++
