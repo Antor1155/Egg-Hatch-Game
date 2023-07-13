@@ -144,7 +144,37 @@ window.addEventListener("load", function(){
                 context.stroke()
             }
         }
+    }
 
+    class Egg{
+        constructor(game){
+            this.game = game
+            this.collisionX = Math.random() * this.game.width
+            this.collisionY = Math.random() * this.game.height
+            this.collisionRadius = 40
+
+            this.image = document.getElementById("egg")
+            this.spriteWidth = 110
+            this.spriteHeight = 135
+            this.width = this.spriteWidth
+            this.height = this.spriteHeight
+            this.spriteX = this.collisionX + this.width * 0.5
+            this.spriteY = this.collisionY + this.height * 0.5
+        }
+
+        draw(context){
+            context.drawImage(this.image, this.spriteX, this.spriteY)
+
+            if (this.game.debug){
+                context.beginPath();
+                context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
+                context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
+                context.globalAlpha = 0.8
+                context.fill()
+                context.restore()
+                context.stroke()
+            }
+        }
     }
 
     class Game {
@@ -162,6 +192,8 @@ window.addEventListener("load", function(){
             this.player = new Player(this)
             this.numberOfObstacles = 5
             this.obstacles = []
+            this.eggs = []
+            this.maxEggs = 5
             this.mouse = {
                 x: this.width * 0.5,
                 y: this.width * 0.5,
