@@ -37,20 +37,22 @@ window.addEventListener("load", function(){
         draw(context){
             context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight,  this.spriteX, this.spriteY, this.width, this.height)
 
+            if (this.game.debug){
 
-            context.beginPath();
-            context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
-            context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
-            context.globalAlpha = 0.3
-            context.fill()
-            context.restore()
-            context.stroke()
-
-            // new line draw 
-            context.beginPath()
-            context.moveTo(this.collisionX, this.collisionY)
-            context.lineTo(this.game.mouse.x, this.game.mouse.y)
-            context.stroke()
+                context.beginPath();
+                context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
+                context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
+                context.globalAlpha = 0.3
+                context.fill()
+                context.restore()
+                context.stroke()
+                
+                // new line draw 
+                context.beginPath()
+                context.moveTo(this.collisionX, this.collisionY)
+                context.lineTo(this.game.mouse.x, this.game.mouse.y)
+                context.stroke()
+            }
         }
 
         update(){
@@ -122,14 +124,15 @@ window.addEventListener("load", function(){
         draw(context){
             context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height)
 
-
-            context.beginPath();
-            context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
-            context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
-            context.globalAlpha = 0.8
-            context.fill()
-            context.restore()
-            context.stroke()
+            if (this.game.debug){
+                context.beginPath();
+                context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
+                context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
+                context.globalAlpha = 0.8
+                context.fill()
+                context.restore()
+                context.stroke()
+            }
         }
 
     }
@@ -140,6 +143,7 @@ window.addEventListener("load", function(){
             this.width = this.canvas.width
             this.height = this.canvas.height
             this.topmargin = 260
+            this.debug = true
             this.player = new Player(this)
             this.numberOfObstacles = 5
             this.obstacles = []
@@ -169,13 +173,19 @@ window.addEventListener("load", function(){
                     this.mouse.y = e.offsetY
                 }
             })
+
+            // debug mode to see collision are for obstacles 
+            window.addEventListener("keydown", e =>{
+                if (e.key == "d") this.debug = !this.debug
+            })
         }
         // render a player 
         render(context){
+            this.obstacles.forEach( obstacle=>obstacle.draw(context) )
+            
             this.player.draw(context)
             this.player.update()
 
-            this.obstacles.forEach( obstacle=>obstacle.draw(context) )
         }
 
         checkCollision(a, b){
