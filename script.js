@@ -25,7 +25,7 @@ window.addEventListener("load", function(){
 
            this.image = document.getElementById("bull")
            this.spriteWidth = 255
-           this.spriteHeight = 255
+           this.spriteHeight = 256
            this.height = this.spriteHeight
            this.width = this.spriteWidth
            this.spriteX = this.collisionX - this.width * 0.5
@@ -153,7 +153,12 @@ window.addEventListener("load", function(){
             this.width = this.canvas.width
             this.height = this.canvas.height
             this.topmargin = 240
+
             this.debug = true
+            this.fps = 70
+            this.timer = 0
+            this.interval = 1000/this.fps
+
             this.player = new Player(this)
             this.numberOfObstacles = 5
             this.obstacles = []
@@ -190,12 +195,18 @@ window.addEventListener("load", function(){
             })
         }
         // render a player 
-        render(context){
-            this.obstacles.forEach( obstacle=>obstacle.draw(context) )
+        render(context, deltaTime){  
+            if (this.timer > this.interval){
+                context.clearRect(0, 0, this.width, this.height)
+                this.obstacles.forEach( obstacle=>obstacle.draw(context) )
+                this.player.draw(context)
+                this.player.update()
 
-            this.player.draw(context)
-            this.player.update()
-
+                this.timer = 0
+            }
+            this.timer += deltaTime 
+            
+            
         }
 
         checkCollision(a, b){
@@ -242,12 +253,16 @@ window.addEventListener("load", function(){
     console.log(game)
 
     // infinite loop of animation function 
-    function animation(){
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        game.render(ctx)
+    let lastTime = 0
+    function animation(timeStamp){
+        const deltaTime = timeStamp - lastTime
+        lastTime = timeStamp
+
+        // ctx.clearRect(0, 0, canvas.width, canvas.height)
+        game.render(ctx, deltaTime)
         
         requestAnimationFrame(animation)
     }
 
-    animation()
+    animation(0)
 })
