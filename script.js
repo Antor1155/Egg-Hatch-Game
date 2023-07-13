@@ -16,7 +16,7 @@ window.addEventListener("load", function(){
            this.game = game
            this.collisionX = this.game.width * 0.5;
            this.collisionY = this.game.height * 0.5;
-           this.collisionRadius = 30
+           this.collisionRadius = 40
            this.speedX = 0
            this.speedY = 0
            this.speedModifier = 7
@@ -145,6 +145,10 @@ window.addEventListener("load", function(){
                 context.stroke()
             }
         }
+
+        update(){
+
+        }
     }
 
     class Egg{
@@ -193,7 +197,6 @@ window.addEventListener("load", function(){
                     this.collisionX = object.collisionX + (sumOfRadii + 1) * unit_x
                     this.collisionY = object.collisionY + (sumOfRadii + 1) * unit_y
 
-                    console.log(collision)
                 }
             })
         }
@@ -219,6 +222,8 @@ window.addEventListener("load", function(){
             this.eggInterval = 500
             this.eggs = []
             this.maxEggs = 10
+
+            this.gameObjects = []
 
             this.mouse = {
                 x: this.width * 0.5,
@@ -257,14 +262,15 @@ window.addEventListener("load", function(){
             // the main render fucntion to render according to fps 
             if (this.timer > this.interval){
                 context.clearRect(0, 0, this.width, this.height)
-                this.obstacles.forEach( obstacle=>obstacle.draw(context) )
-                this.eggs.forEach( eggs=>{
-                    eggs.draw(context)
-                    eggs.update()
+                this.gameObjects = [this.player, ...this.obstacles, ...this.eggs]
+                // sort array by vertical position as drawn first go back
+                this.gameObjects.sort((a, b)=>a.collisionY - b.collisionY)
+                this.gameObjects.forEach( object=>{
+                    object.draw(context)
+                    object.update()
                 })
-                this.player.draw(context)
-                this.player.update()
 
+                
                 this.timer = 0
             }
             this.timer += deltaTime 
@@ -323,7 +329,6 @@ window.addEventListener("load", function(){
 
     const game = new Game(canvas)
     game.init()
-    console.log(game)
 
     // infinite loop of animation function 
     let lastTime = 0
