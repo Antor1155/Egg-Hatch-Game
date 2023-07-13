@@ -19,7 +19,7 @@ window.addEventListener("load", function(){
            this.collisionRadius = 30
            this.speedX = 0
            this.speedY = 0
-           this.speedModifier = 5
+           this.speedModifier = 7
            this.dx = 0
            this.dy = 0
 
@@ -58,6 +58,7 @@ window.addEventListener("load", function(){
         update(){
             this.dx = (this.game.mouse.x - this.collisionX)
             this.dy = (this.game.mouse.y - this.collisionY)
+
             // sprite animation 
             const angle = Math.atan2(this.dy, this.dx)
             if(angle < -2.74 || angle > 2.74) this.frameY = 6
@@ -176,6 +177,26 @@ window.addEventListener("load", function(){
                 context.stroke()
             }
         }
+
+        update(){
+            this.spriteX = this.collisionX - this.width * 0.5
+            this.spriteY = this.collisionY - this.height * 0.5 - 30
+
+            let collisionObjects = [this.game.player, ...this.game.obstacles]
+
+            collisionObjects.forEach(object => {
+                let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, object)
+                if(collision){
+                    const unit_x = dx / distance
+                    const unit_y = dy / distance
+                    
+                    this.collisionX = object.collisionX + (sumOfRadii + 1) * unit_x
+                    this.collisionY = object.collisionY + (sumOfRadii + 1) * unit_y
+
+                    console.log(collision)
+                }
+            })
+        }
     }
 
     class Game {
@@ -237,7 +258,10 @@ window.addEventListener("load", function(){
             if (this.timer > this.interval){
                 context.clearRect(0, 0, this.width, this.height)
                 this.obstacles.forEach( obstacle=>obstacle.draw(context) )
-                this.eggs.forEach( eggs=>eggs.draw(context) )
+                this.eggs.forEach( eggs=>{
+                    eggs.draw(context)
+                    eggs.update()
+                })
                 this.player.draw(context)
                 this.player.update()
 
@@ -248,7 +272,6 @@ window.addEventListener("load", function(){
             // add eggs periodically 
             if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs){
                 this.addEgg()
-                console.log(this.eggs)
                 this.eggTimer = 0
             } else {
                 this.eggTimer += deltaTime
@@ -295,8 +318,6 @@ window.addEventListener("load", function(){
                 }
                 attempts++
             }
-
-            // this.obstacles.forEach(obstacle => obstacle.draw())
         }
     }
 
