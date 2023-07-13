@@ -22,9 +22,20 @@ window.addEventListener("load", function(){
            this.speedModifier = 5
            this.dx = 0
            this.dy = 0
+
+           this.image = document.getElementById("bull")
+           this.spriteWidth = 255
+           this.spriteHeight = 255
+           this.height = this.spriteHeight
+           this.width = this.spriteWidth
+           this.spriteX = this.collisionX - this.width * 0.5
+           this.spriteY = this.collisionY - this.height * 0.5
         }
         // drawing  a player 
         draw(context){
+            context.drawImage(this.image, 0, 0, this.spriteWidth, this.spriteHeight,  this.spriteX, this.spriteY, this.width, this.height)
+
+
             context.beginPath();
             context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
             context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
@@ -55,6 +66,9 @@ window.addEventListener("load", function(){
             
             this.collisionX += this.speedX * this.speedModifier
             this.collisionY += this.speedY * this.speedModifier
+
+            this.spriteX = this.collisionX - this.width * 0.5
+            this.spriteY = this.collisionY - this.height * 0.5 - 100
 
             // custom collision funciton to collision and obstacles
 
