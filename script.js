@@ -37,7 +37,7 @@ window.addEventListener("load", function () {
             this.frameY = 0
         }
 
-        restart(){
+        restart() {
             this.collisionX = this.game.width * 0.5;
             this.collisionY = this.game.height * 0.5;
             this.spriteX = this.collisionX - this.width * 0.5
@@ -218,7 +218,7 @@ window.addEventListener("load", function () {
             })
 
             // hatching 
-            if (this.hatchTimer > this.hatchInterval || this.collisionY  < this.game.topmargin) {
+            if (this.hatchTimer > this.hatchInterval || this.collisionY < this.game.topmargin) {
                 this.markedForDeletion = true
                 this.game.removeGameObjects()
 
@@ -424,9 +424,9 @@ window.addEventListener("load", function () {
             this.collisionX -= Math.cos(this.angle) * this.speedX
             this.collisionY -= Math.sin(this.angle) * this.speedY
 
-            if (this.radius > 0.1){
+            if (this.radius > 0.1) {
                 this.radius -= 0.05
-            } else{
+            } else {
                 this.markedForDeletion = true
                 this.game.removeGameObjects()
             }
@@ -501,7 +501,7 @@ window.addEventListener("load", function () {
             // debug mode to see collision are for obstacles 
             window.addEventListener("keydown", e => {
                 if (e.key == "d") this.debug = !this.debug
-                else if (e.key == "r"){
+                else if (e.key == "r") {
                     this.restart()
                 }
             })
@@ -520,6 +520,49 @@ window.addEventListener("load", function () {
                     object.update(deltaTime)
                 })
                 this.timer = 0
+
+                // draw status text 
+                context.save()
+                context.textAlign = "left"
+                context.fillText(`Score : ${this.score}`, 25, 50)
+                if (this.debug) {
+                    context.fillText(`Lost Larva : ${this.lostHatchlings}`, 25, 100)
+                }
+                context.restore()
+
+                // winning and loosing message 
+                if (this.score >= this.winningScore) {
+                    this.gameOver = true
+                    context.save()
+                    context.fillStyle = "rgba(0, 0, 0, 0.5)"
+                    context.fillRect(0, 0, this.width, this.height)
+
+                    context.fillStyle = "white"
+                    context.textAlign = "center"
+                    context.shadowOffsetX = 4
+                    context.shadowOffsetY = 5
+                    context.shadowColor = "yellow"
+
+                    let message1
+                    let message2
+                    if (this.lostHatchlings <= this.loosingScore) {
+                        message1 = "BullsEye !!!"
+                        message2 = "You bullied the bullies !"
+                    } else {
+                        message1 = "Bullocks !"
+                        message2 = "You lost " + this.lostHatchlings + " Hachlinks"
+                    }
+
+                    context.font = "130px Bangers"
+                    context.fillText(message1, this.width * 0.5, this.height * 0.5 - 20)
+                    context.restore()
+                    context.save()
+                    context.font = "40px Bangers"
+                    context.fillText(message2, this.width * 0.5, this.height * 0.5 + 30)
+                    context.fillText("Final Score : " + this.score + ". Press 'R' to restart !", this.width * 0.5, this.height * 0.5 + 80)
+
+                    context.restore()
+                }
             }
             this.timer += deltaTime
 
@@ -531,48 +574,7 @@ window.addEventListener("load", function () {
                 this.eggTimer += deltaTime
             }
 
-            // draw status text 
-            context.save()
-            context.textAlign = "left"
-            context.fillText(`Score : ${this.score}`, 25, 50)
-            if (this.debug) {
-                context.fillText(`Lost Larva : ${this.lostHatchlings}`, 25, 100)
-            }
-            context.restore()
 
-            // winning and loosing message 
-            if (this.score >= this.winningScore){
-                this.gameOver = true
-                context.save()
-                context.fillStyle = "rgba(0, 0, 0, 0.5)"
-                context.fillRect(0, 0, this.width, this.height)
-                
-                context.fillStyle = "white"
-                context.textAlign = "center"
-                context.shadowOffsetX = 4
-                context.shadowOffsetY = 5
-                context.shadowColor = "yellow"
-
-                let message1
-                let message2
-                if(this.lostHatchlings <= this.loosingScore){
-                    message1 = "BullsEye !!!"
-                    message2 = "You bullied the bullies !"
-                } else{
-                    message1 = "Bullocks !"
-                    message2 = "You lost " + this.lostHatchlings  + " Hachlinks"
-                }
-
-                context.font = "130px Bangers"
-                context.fillText(message1, this.width * 0.5, this.height * 0.5 -20)
-                context.restore()
-                context.save()
-                context.font = "40px Bangers"
-                context.fillText(message2, this.width * 0.5, this.height * 0.5 + 30)
-                context.fillText("Final Score : " + this.score + ". Press 'R' to restart !", this.width * 0.5, this.height * 0.5 + 80)
-
-                context.restore()
-            }
         }
 
         checkCollision(a, b) {
@@ -599,7 +601,7 @@ window.addEventListener("load", function () {
 
         }
 
-        restart(){
+        restart() {
             this.player.restart()
             this.obstacles = []
             this.eggs = []
