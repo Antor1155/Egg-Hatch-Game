@@ -186,7 +186,7 @@ window.addEventListener("load", function(){
             this.spriteX = this.collisionX - this.width * 0.5
             this.spriteY = this.collisionY - this.height * 0.5 - 30
 
-            let collisionObjects = [this.game.player, ...this.game.obstacles]
+            let collisionObjects = [this.game.player, ...this.game.obstacles, ...this.game.enemies]
 
             collisionObjects.forEach(object => {
                 let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, object)
@@ -205,12 +205,64 @@ window.addEventListener("load", function(){
     class Enemy{
         constructor(game){
             this.game = game
-            this.collisionRadius = 30
-            this.collisionX = this.game.width
-            this.collisionY = this.game.topmargin + Math.random() * this.game.height
-
+            this.collisionRadius = 40
             this.speedX = Math.random() * 3 + 0.5
+
+            this.image = document.getElementById("toad")
+            this.spriteWidth = 140
+            this.spriteHeight = 260
+            this.width = this.spriteWidth
+            this.height = this.spriteHeight
+            this.spriteX 
+            this.spriteY
+
+            this.collisionX = this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
+            this.collisionY = this.game.topmargin + Math.random() * (this.game.height - this.game.topmargin)
         }
+
+        draw(context){
+            context.drawImage(this.image, this.spriteX, this.spriteY)
+
+            if (this.game.debug){
+                context.beginPath();
+                context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
+                context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
+                context.globalAlpha = 0.8
+                context.fill()
+                context.restore()
+                context.stroke()
+            }
+        }
+
+        update(){
+            this.spriteX = this.collisionX - this.width * 0.5 + 10
+            this.spriteY = this.collisionY - this.height * 0.5 - 50
+
+            this.collisionX -= this.speedX
+
+            // when passes right side of screen , regenerate from left side of the screen 
+            if (this.spriteX + this.width < 0){
+                this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
+
+                this.collisionY = this.game.topmargin + Math.random() * (this.game.height - this.game.topmargin)
+            }
+
+            // collision detection 
+            let collisionObjects = [this.game.player, ...this.game.obstacles]
+
+            collisionObjects.forEach(object => {
+                let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, object)
+                if(collision){
+                    const unit_x = dx / distance
+                    const unit_y = dy / distance
+                    
+                    this.collisionX = object.collisionX + (sumOfRadii + 1) * unit_x
+                    this.collisionY = object.collisionY + (sumOfRadii + 1) * unit_y
+
+                }
+            })
+        }
+
     }
 
     class Game {
@@ -233,6 +285,9 @@ window.addEventListener("load", function(){
             this.eggInterval = 500
             this.eggs = []
             this.maxEggs = 10
+
+            this.maxEnemy = 5
+            this.enemies = []
 
             this.gameObjects = []
 
@@ -273,15 +328,13 @@ window.addEventListener("load", function(){
             // the main render fucntion to render according to fps 
             if (this.timer > this.interval){
                 context.clearRect(0, 0, this.width, this.height)
-                this.gameObjects = [this.player, ...this.obstacles, ...this.eggs]
+                this.gameObjects = [this.player, ...this.obstacles, ...this.eggs, ...this.enemies]
                 // sort array by vertical position as drawn first go back
                 this.gameObjects.sort((a, b)=>a.collisionY - b.collisionY)
                 this.gameObjects.forEach( object=>{
                     object.draw(context)
                     object.update()
                 })
-
-                
                 this.timer = 0
             }
             this.timer += deltaTime 
@@ -294,8 +347,6 @@ window.addEventListener("load", function(){
                 this.eggTimer += deltaTime
             }
         }
-
-
 
         checkCollision(a, b){
             const dx = a.collisionX - b.collisionX
@@ -310,7 +361,15 @@ window.addEventListener("load", function(){
             this.eggs.push(new Egg(this))
         }
 
+        addEnemy(){
+            this.enemies.push(new Enemy(this))
+        }
+
         init(){
+            for (let i = 0; i < this.maxEnemy; i++){
+                this.addEnemy()
+            }
+
             let attempts = 0
 
             while(this.obstacles.length < this.numberOfObstacles && attempts < 500){
