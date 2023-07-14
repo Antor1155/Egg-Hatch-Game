@@ -36,6 +36,13 @@ window.addEventListener("load", function () {
             this.frameX = 0
             this.frameY = 0
         }
+
+        restart(){
+            this.collisionX = this.game.width * 0.5;
+            this.collisionY = this.game.height * 0.5;
+            this.spriteX = this.collisionX - this.width * 0.5
+            this.spriteY = this.collisionY - this.height * 0.5
+        }
         // drawing  a player 
         draw(context) {
             context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height)
@@ -494,6 +501,9 @@ window.addEventListener("load", function () {
             // debug mode to see collision are for obstacles 
             window.addEventListener("keydown", e => {
                 if (e.key == "d") this.debug = !this.debug
+                else if (e.key == "r"){
+                    this.restart()
+                }
             })
         }
         // render 
@@ -587,6 +597,24 @@ window.addEventListener("load", function () {
             this.hatchligns = this.hatchligns.filter(object => !object.markedForDeletion)
             this.particles = this.particles.filter(object => !object.markedForDeletion)
 
+        }
+
+        restart(){
+            this.player.restart()
+            this.obstacles = []
+            this.eggs = []
+            this.enemies = []
+            this.hatchlings = []
+            this.particles = []
+            this.init()
+            this.gameOver = false
+            this.score = 0
+            this.lostHatchlings = 0
+            this.mouse = {
+                x: this.width * 0.5,
+                y: this.width * 0.5,
+                pressed: false
+            }
         }
 
         init() {
