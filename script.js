@@ -1,10 +1,10 @@
-window.addEventListener("load", function(){
-    const canvas =this.document.getElementById("canvas1")
+window.addEventListener("load", function () {
+    const canvas = this.document.getElementById("canvas1")
     const ctx = canvas.getContext("2d")
-    
+
     canvas.width = 1280
     canvas.height = 720
-    
+
     ctx.fillStyle = "white"
     ctx.lineWidth = 3;
     ctx.strokeStyle = "white"
@@ -15,32 +15,32 @@ window.addEventListener("load", function(){
     this.document.getElementById("overlay").width = canvas.width
 
     class Player {
-        constructor(game){
-           this.game = game
-           this.collisionX = this.game.width * 0.5;
-           this.collisionY = this.game.height * 0.5;
-           this.collisionRadius = 40
-           this.speedX = 0
-           this.speedY = 0
-           this.speedModifier = 7
-           this.dx = 0
-           this.dy = 0
+        constructor(game) {
+            this.game = game
+            this.collisionX = this.game.width * 0.5;
+            this.collisionY = this.game.height * 0.5;
+            this.collisionRadius = 40
+            this.speedX = 0
+            this.speedY = 0
+            this.speedModifier = 7
+            this.dx = 0
+            this.dy = 0
 
-           this.image = document.getElementById("bull")
-           this.spriteWidth = 255
-           this.spriteHeight = 256
-           this.height = this.spriteHeight
-           this.width = this.spriteWidth
-           this.spriteX = this.collisionX - this.width * 0.5
-           this.spriteY = this.collisionY - this.height * 0.5
-           this.frameX = 0
-           this.frameY = 0
+            this.image = document.getElementById("bull")
+            this.spriteWidth = 255
+            this.spriteHeight = 256
+            this.height = this.spriteHeight
+            this.width = this.spriteWidth
+            this.spriteX = this.collisionX - this.width * 0.5
+            this.spriteY = this.collisionY - this.height * 0.5
+            this.frameX = 0
+            this.frameY = 0
         }
         // drawing  a player 
-        draw(context){
-            context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight,  this.spriteX, this.spriteY, this.width, this.height)
+        draw(context) {
+            context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height)
 
-            if (this.game.debug){
+            if (this.game.debug) {
 
                 context.beginPath();
                 context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
@@ -49,7 +49,7 @@ window.addEventListener("load", function(){
                 context.fill()
                 context.restore()
                 context.stroke()
-                
+
                 // new line draw 
                 context.beginPath()
                 context.moveTo(this.collisionX, this.collisionY)
@@ -58,32 +58,32 @@ window.addEventListener("load", function(){
             }
         }
 
-        update(){
+        update() {
             this.dx = (this.game.mouse.x - this.collisionX)
             this.dy = (this.game.mouse.y - this.collisionY)
 
             // sprite animation 
             const angle = Math.atan2(this.dy, this.dx)
-            if(angle < -2.74 || angle > 2.74) this.frameY = 6
-            else if(angle < -1.96) this.frameY = 7
-            else if(angle < -1.17) this.frameY = 0
-            else if(angle < -0.39) this.frameY = 1
-            else if(angle < 0.39) this.frameY = 2
-            else if(angle < 1.17) this.frameY = 3
-            else if(angle < 1.96) this.frameY = 4
-            else if(angle < 2.74) this.frameY = 5
-            
+            if (angle < -2.74 || angle > 2.74) this.frameY = 6
+            else if (angle < -1.96) this.frameY = 7
+            else if (angle < -1.17) this.frameY = 0
+            else if (angle < -0.39) this.frameY = 1
+            else if (angle < 0.39) this.frameY = 2
+            else if (angle < 1.17) this.frameY = 3
+            else if (angle < 1.96) this.frameY = 4
+            else if (angle < 2.74) this.frameY = 5
 
-            const distance =  Math.hypot(this.dy, this.dx)
 
-            if(distance > this.speedModifier){
-                this.speedX = this.dx/distance || 0
-                this.speedY = this.dy/distance || 0
+            const distance = Math.hypot(this.dy, this.dx)
+
+            if (distance > this.speedModifier) {
+                this.speedX = this.dx / distance || 0
+                this.speedY = this.dy / distance || 0
             } else {
                 this.speedX = 0
                 this.speedY = 0
             }
-            
+
             this.collisionX += this.speedX * this.speedModifier
             this.collisionY += this.speedY * this.speedModifier
 
@@ -91,25 +91,25 @@ window.addEventListener("load", function(){
             this.spriteY = this.collisionY - this.height * 0.5 - 100
 
             // horizontal boundaries
-            if (this.collisionX < 0 + this.collisionRadius ){
+            if (this.collisionX < 0 + this.collisionRadius) {
                 this.collisionX = this.collisionRadius
-            } else if (this.collisionX > this.game.width - this.collisionRadius){
+            } else if (this.collisionX > this.game.width - this.collisionRadius) {
                 this.collisionX = this.game.width - this.collisionRadius
             }
             // vertical boundaries 
-            if (this.collisionY < this.game.topmargin){
+            if (this.collisionY < this.game.topmargin) {
                 this.collisionY = this.game.topmargin
             }
 
             // custom collision funciton to collision and obstacles
-            this.game.obstacles.forEach(obstacle =>{
+            this.game.obstacles.forEach(obstacle => {
                 let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, obstacle)
 
-                if(collision){
+                if (collision) {
                     const unit_x = dx / distance;
                     const unit_y = dy / distance;
                     this.collisionX = obstacle.collisionX + (sumOfRadii + 1) * unit_x
-                    
+
                     this.collisionY = obstacle.collisionY + (sumOfRadii + 1) * unit_y
                 }
             })
@@ -118,7 +118,7 @@ window.addEventListener("load", function(){
     }
 
     class Obstacle {
-        constructor(game){
+        constructor(game) {
             this.game = game
             this.collisionX = Math.random() * this.game.width
             this.collisionY = Math.random() * this.game.height
@@ -131,14 +131,14 @@ window.addEventListener("load", function(){
             this.height = this.spriteHeight
             this.spriteX = this.collisionX - this.width * 0.5
             this.spriteY = this.collisionY - this.height * 0.5 - 70
-            this.frameX = Math.floor(Math.random() * 4) 
-            this.frameY = Math.floor(Math.random() * 3) 
+            this.frameX = Math.floor(Math.random() * 4)
+            this.frameY = Math.floor(Math.random() * 3)
         }
 
-        draw(context){
+        draw(context) {
             context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height)
 
-            if (this.game.debug){
+            if (this.game.debug) {
                 context.beginPath();
                 context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
                 context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
@@ -149,19 +149,19 @@ window.addEventListener("load", function(){
             }
         }
 
-        update(){
+        update() {
 
         }
     }
 
-    class Egg{
-        constructor(game){
+    class Egg {
+        constructor(game) {
             this.game = game
             this.collisionRadius = 40
             this.margin = this.collisionRadius * 2
             this.collisionX = this.margin + Math.random() * (this.game.width - this.margin * 2)
-            this.collisionY = this.game.topmargin + Math.random() * (this.game.height - this.game.topmargin -this.margin)
-   
+            this.collisionY = this.game.topmargin + Math.random() * (this.game.height - this.game.topmargin - this.margin)
+
             this.image = document.getElementById("egg")
             this.spriteWidth = 110
             this.spriteHeight = 135
@@ -175,10 +175,10 @@ window.addEventListener("load", function(){
             this.markedForDeletion = false
         }
 
-        draw(context){
+        draw(context) {
             context.drawImage(this.image, this.spriteX, this.spriteY)
 
-            if (this.game.debug){
+            if (this.game.debug) {
                 context.beginPath();
                 context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
                 context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
@@ -192,19 +192,18 @@ window.addEventListener("load", function(){
             }
         }
 
-        update(deltaTime){
+        update(deltaTime) {
             this.spriteX = this.collisionX - this.width * 0.5
             this.spriteY = this.collisionY - this.height * 0.5 - 30
 
-            let collisionObjects = [this.game.player, ...this.game.obstacles, ...this.game.enemies]
-
             // collision detection here 
+            let collisionObjects = [this.game.player, ...this.game.obstacles, ...this.game.enemies]
             collisionObjects.forEach(object => {
                 let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, object)
-                if(collision){
+                if (collision) {
                     const unit_x = dx / distance
                     const unit_y = dy / distance
-                    
+
                     this.collisionX = object.collisionX + (sumOfRadii + 1) * unit_x
                     this.collisionY = object.collisionY + (sumOfRadii + 1) * unit_y
 
@@ -212,21 +211,21 @@ window.addEventListener("load", function(){
             })
 
             // hatching 
-            if (this.hatchTimer > this.hatchInterval){
+            if (this.hatchTimer > this.hatchInterval) {
                 this.markedForDeletion = true
                 this.game.removeGameObjects()
-                
+
                 this.game.hatchligns.push(new Larva(this.game, this.collisionX, this.collisionY))
             }
-            else{
+            else {
                 this.hatchTimer += deltaTime
             }
-            
+
         }
     }
 
-    class Larva{
-        constructor(game, x, y){
+    class Larva {
+        constructor(game, x, y) {
             this.game = game
             this.collisionX = x
             this.collisionY = y
@@ -240,14 +239,16 @@ window.addEventListener("load", function(){
             this.spriteX = this.collisionX - this.width * 0.5
             this.spriteY = this.collisionY - this.height * 0.5 - 30
 
-
             this.speedY = 1 + Math.random()
+
+            this.frameX = 0
+            this.frameY = Math.floor(Math.random() * 2)
         }
 
-        draw(context){
-            context.drawImage(this.image, 0, 0, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height)
+        draw(context) {
+            context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height)
 
-            if (this.game.debug){
+            if (this.game.debug) {
                 context.beginPath();
                 context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
                 context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
@@ -258,20 +259,42 @@ window.addEventListener("load", function(){
             }
         }
 
-        update(){
+        update() {
             this.collisionY -= this.speedY
             this.spriteX = this.collisionX - this.width * 0.5
-            this.spriteY = this.collisionY - this.height * 0.5 -30
+            this.spriteY = this.collisionY - this.height * 0.5 - 30
 
-            if (this.collisionY < this.game.topmargin - 0){
+            if (this.collisionY < this.game.topmargin - 0) {
                 this.markedForDeletion = true
                 this.game.removeGameObjects()
             }
+
+            // collision detection here 
+            let collisionObjects = [this.game.player, ...this.game.obstacles]
+            collisionObjects.forEach(object => {
+                let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, object)
+                if (collision) {
+                    const unit_x = dx / distance
+                    const unit_y = dy / distance
+
+                    this.collisionX = object.collisionX + (sumOfRadii + 1) * unit_x
+                    this.collisionY = object.collisionY + (sumOfRadii + 1) * unit_y
+
+                }
+            })
+
+            // collision with enemies 
+            this.game.enemies.forEach(enemy =>{
+                if (this.game.checkCollision(this, enemy)[0]){
+                    this.markedForDeletion = true
+                    this.game.removeGameObjects()
+                }
+            })
         }
     }
 
-    class Enemy{
-        constructor(game){
+    class Enemy {
+        constructor(game) {
             this.game = game
             this.collisionRadius = 40
             this.speedX = Math.random() * 3 + 0.5
@@ -281,17 +304,17 @@ window.addEventListener("load", function(){
             this.spriteHeight = 260
             this.width = this.spriteWidth
             this.height = this.spriteHeight
-            this.spriteX 
+            this.spriteX
             this.spriteY
 
             this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
             this.collisionY = this.game.topmargin + Math.random() * (this.game.height - this.game.topmargin)
         }
 
-        draw(context){
+        draw(context) {
             context.drawImage(this.image, this.spriteX, this.spriteY)
 
-            if (this.game.debug){
+            if (this.game.debug) {
                 context.beginPath();
                 context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
                 context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
@@ -302,14 +325,14 @@ window.addEventListener("load", function(){
             }
         }
 
-        update(){
+        update() {
             this.spriteX = this.collisionX - this.width * 0.5 + 10
             this.spriteY = this.collisionY - this.height * 0.5 - 50
 
             this.collisionX -= this.speedX
 
             // when passes right side of screen , regenerate from left side of the screen 
-            if (this.spriteX + this.width < 0){
+            if (this.spriteX + this.width < 0) {
                 this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
 
                 this.collisionY = this.game.topmargin + Math.random() * (this.game.height - this.game.topmargin)
@@ -320,10 +343,10 @@ window.addEventListener("load", function(){
 
             collisionObjects.forEach(object => {
                 let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, object)
-                if(collision){
+                if (collision) {
                     const unit_x = dx / distance
                     const unit_y = dy / distance
-                    
+
                     this.collisionX = object.collisionX + (sumOfRadii + 1) * unit_x
                     this.collisionY = object.collisionY + (sumOfRadii + 1) * unit_y
 
@@ -334,7 +357,7 @@ window.addEventListener("load", function(){
     }
 
     class Game {
-        constructor(canvas){
+        constructor(canvas) {
             this.canvas = canvas
             this.width = this.canvas.width
             this.height = this.canvas.height
@@ -343,7 +366,7 @@ window.addEventListener("load", function(){
             this.debug = true
             this.fps = 70
             this.timer = 0
-            this.interval = 1000/this.fps
+            this.interval = 1000 / this.fps
 
             this.player = new Player(this)
             this.numberOfObstacles = 5
@@ -382,35 +405,35 @@ window.addEventListener("load", function(){
             })
 
             canvas.addEventListener("mousemove", e => {
-                if(this.mouse.pressed){
+                if (this.mouse.pressed) {
                     this.mouse.x = e.offsetX
                     this.mouse.y = e.offsetY
                 }
             })
 
             // debug mode to see collision are for obstacles 
-            window.addEventListener("keydown", e =>{
+            window.addEventListener("keydown", e => {
                 if (e.key == "d") this.debug = !this.debug
             })
         }
         // render 
-        render(context, deltaTime){  
+        render(context, deltaTime) {
             // the main render fucntion to render according to fps 
-            if (this.timer > this.interval){
+            if (this.timer > this.interval) {
                 context.clearRect(0, 0, this.width, this.height)
                 this.gameObjects = [this.player, ...this.obstacles, ...this.eggs, ...this.enemies, ...this.hatchligns]
                 // sort array by vertical position as drawn first go back
-                this.gameObjects.sort((a, b)=>a.collisionY - b.collisionY)
-                this.gameObjects.forEach( object=>{
+                this.gameObjects.sort((a, b) => a.collisionY - b.collisionY)
+                this.gameObjects.forEach(object => {
                     object.draw(context)
                     object.update(deltaTime)
                 })
                 this.timer = 0
             }
-            this.timer += deltaTime 
+            this.timer += deltaTime
 
             // add eggs periodically 
-            if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs){
+            if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs) {
                 this.addEgg()
                 this.eggTimer = 0
             } else {
@@ -418,7 +441,7 @@ window.addEventListener("load", function(){
             }
         }
 
-        checkCollision(a, b){
+        checkCollision(a, b) {
             const dx = a.collisionX - b.collisionX
             const dy = a.collisionY - b.collisionY
             const distance = Math.hypot(dy, dx)
@@ -427,44 +450,44 @@ window.addEventListener("load", function(){
             return [(distance < sumOfRadii), distance, sumOfRadii, dx, dy]
         }
 
-        addEgg(){
+        addEgg() {
             this.eggs.push(new Egg(this))
         }
 
-        addEnemy(){
+        addEnemy() {
             this.enemies.push(new Enemy(this))
         }
 
-        removeGameObjects(){
+        removeGameObjects() {
             this.eggs = this.eggs.filter(object => !object.markedForDeletion)
             this.hatchligns = this.hatchligns.filter(object => !object.markedForDeletion)
         }
 
-        init(){
-            for (let i = 0; i < this.maxEnemy; i++){
+        init() {
+            for (let i = 0; i < this.maxEnemy; i++) {
                 this.addEnemy()
             }
 
             let attempts = 0
 
-            while(this.obstacles.length < this.numberOfObstacles && attempts < 500){
+            while (this.obstacles.length < this.numberOfObstacles && attempts < 500) {
                 let testObstacle = new Obstacle(this)
                 let overlap = false
 
-                this.obstacles.forEach(obstacle =>{
+                this.obstacles.forEach(obstacle => {
                     const dx = testObstacle.collisionX - obstacle.collisionX;
-                    const dy = testObstacle.collisionY - obstacle.collisionY; 
+                    const dy = testObstacle.collisionY - obstacle.collisionY;
 
                     const distanceBuffer = 150;
                     const distance = Math.hypot(dy, dx)
                     const sumOfRadii = testObstacle.collisionRadius + obstacle.collisionRadius + distanceBuffer
 
-                    if (distance < sumOfRadii){
+                    if (distance < sumOfRadii) {
                         overlap = true
                     }
                 })
 
-                if (!overlap && testObstacle.spriteX > 0 && testObstacle.spriteX < this.width - testObstacle.width && testObstacle.collisionY >= this.topmargin + this.player.collisionRadius + testObstacle.collisionRadius){
+                if (!overlap && testObstacle.spriteX > 0 && testObstacle.spriteX < this.width - testObstacle.width && testObstacle.collisionY >= this.topmargin + this.player.collisionRadius + testObstacle.collisionRadius) {
                     this.obstacles.push(testObstacle)
                 }
                 attempts++
@@ -477,13 +500,13 @@ window.addEventListener("load", function(){
 
     // infinite loop of animation function 
     let lastTime = 0
-    function animation(timeStamp){
+    function animation(timeStamp) {
         const deltaTime = timeStamp - lastTime
         lastTime = timeStamp
 
         // ctx.clearRect(0, 0, canvas.width, canvas.height)
         game.render(ctx, deltaTime)
-        
+
         requestAnimationFrame(animation)
     }
 
