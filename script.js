@@ -267,7 +267,9 @@ window.addEventListener("load", function () {
             if (this.collisionY < this.game.topmargin) {
                 this.markedForDeletion = true
                 this.game.removeGameObjects()
-                this.game.score++
+                // logic to not add score and egges when game over 
+                if (!this.game.gameOver) this.game.score++
+
 
                 // creating particles when larva hides in bushes
                 for (let i = 0; i < 3; i++) {
@@ -294,7 +296,7 @@ window.addEventListener("load", function () {
                 if (this.game.checkCollision(this, enemy)[0]) {
                     this.markedForDeletion = true
                     this.game.removeGameObjects()
-                    this.game.lostHatchlings++
+                    if (!this.game.gameOver) this.game.lostHatchlings++
 
                     // creating sparks when larva eaten by enemies
                     for (let i = 0; i < 5; i++) {
@@ -347,7 +349,7 @@ window.addEventListener("load", function () {
             this.collisionX -= this.speedX
 
             // when passes left side of screen , regenerate from right side of the screen 
-            if (this.spriteX + this.width < 0) {
+            if (this.spriteX + this.width < 0 && !this.game.gameOver) {
                 this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
 
                 this.collisionY = this.game.topmargin + Math.random() * (this.game.height - this.game.topmargin)
@@ -436,6 +438,8 @@ window.addEventListener("load", function () {
             this.timer = 0
             this.interval = 1000 / this.fps
 
+            this.gameOver = false
+
             this.player = new Player(this)
             this.numberOfObstacles = 5
             this.obstacles = []
@@ -456,6 +460,9 @@ window.addEventListener("load", function () {
             this.lostHatchlings = 0
 
             this.particles = []
+
+            this.winningScore = 5
+            this.loosingScore = 5
 
             this.mouse = {
                 x: this.width * 0.5,
@@ -507,7 +514,7 @@ window.addEventListener("load", function () {
             this.timer += deltaTime
 
             // add eggs periodically 
-            if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs) {
+            if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs && !this.gameOver) {
                 this.addEgg()
                 this.eggTimer = 0
             } else {
@@ -522,6 +529,35 @@ window.addEventListener("load", function () {
                 context.fillText(`Lost Larva : ${this.lostHatchlings}`, 25, 100)
             }
             context.restore()
+
+            // winning and loosing message 
+            if (this.score >= this.winningScore){
+                this.gameOver = true
+                context.save()
+                context.fillStyle = "rgba(0, 0, 0, 0.5)"
+                context.fillRect(0, 0, this.width, this.height)
+                
+                context.fillStyle = "white"
+                context.textAlign = "center"
+
+                let message1
+                let message2
+                if(this.lostHatchlings <= this.loosingScore){
+                    message1 = "BullsEye !!!"
+                    message2 = "You bullied the bullies !"
+                } else{
+                    message1 = "Bullocks !"
+                    message2 = "You lost " + this.lostHatchlings  + " Hachlinks"
+                }
+
+                context.font = "130px Helvetica"
+                context.fillText(message1, this.width * 0.5, this.height * 0.5 -20)
+                context.font = "40px Helvetica"
+                context.fillText(message2, this.width * 0.5, this.height * 0.5 + 30)
+                context.fillText("Final Score : " + this.score + ". Press 'R' to restart !", this.width * 0.5, this.height * 0.5 + 80)
+
+                context.restore()
+            }
         }
 
         checkCollision(a, b) {
