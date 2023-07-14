@@ -211,7 +211,7 @@ window.addEventListener("load", function () {
             })
 
             // hatching 
-            if (this.hatchTimer > this.hatchInterval) {
+            if (this.hatchTimer > this.hatchInterval || this.collisionY  < this.game.topmargin) {
                 this.markedForDeletion = true
                 this.game.removeGameObjects()
 
@@ -267,10 +267,10 @@ window.addEventListener("load", function () {
             if (this.collisionY < this.game.topmargin) {
                 this.markedForDeletion = true
                 this.game.removeGameObjects()
-                this.game.score ++
+                this.game.score++
 
                 // creating particles when larva hides in bushes
-                for (let i = 0; i < 3; i ++){
+                for (let i = 0; i < 3; i++) {
                     this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, "yellow"))
                 }
             }
@@ -290,11 +290,16 @@ window.addEventListener("load", function () {
             })
 
             // collision with enemies 
-            this.game.enemies.forEach(enemy =>{
-                if (this.game.checkCollision(this, enemy)[0]){
+            this.game.enemies.forEach(enemy => {
+                if (this.game.checkCollision(this, enemy)[0]) {
                     this.markedForDeletion = true
                     this.game.removeGameObjects()
-                    this.game.lostHatchlings ++
+                    this.game.lostHatchlings++
+
+                    // creating sparks when larva eaten by enemies
+                    for (let i = 0; i < 5; i++) {
+                        this.game.particles.push(new Spark(this.game, this.collisionX, this.collisionY, "blue"))
+                    }
                 }
             })
         }
@@ -363,7 +368,7 @@ window.addEventListener("load", function () {
     }
 
     class Particle {
-        constructor(game, x, y, color){
+        constructor(game, x, y, color) {
             this.game = game
             this.collisionX = x
             this.collisionY = y
@@ -372,11 +377,11 @@ window.addEventListener("load", function () {
             this.speedX = Math.random() * 6 - 3
             this.speedY = Math.random() * 2 + 0.5
             this.angle = 0
-            this.va =  Math.random() * 0.1 + 0.01
+            this.va = Math.random() * 0.1 + 0.01
             this.markedForDeletion = false
         }
 
-        draw(context){
+        draw(context) {
             context.save()
             context.fillStyle = this.color
             context.beginPath()
@@ -388,11 +393,11 @@ window.addEventListener("load", function () {
     }
 
     class Firefly extends Particle {
-        update(){
+        update() {
             this.angle += this.va
-            this.collisionX += this.speedX
+            this.collisionX += Math.cos(this.angle) * this.speedX
             this.collisionY -= this.speedY
-            if (this.collisionY < 0 + this.radius){
+            if (this.collisionY < 0 - this.radius) {
                 this.markedForDeletion = true
                 this.game.removeGameObjects()
             }
@@ -400,8 +405,17 @@ window.addEventListener("load", function () {
     }
 
     class Spark extends Particle {
-        update(){
+        update() {
+            this.angle += this.va * 0.5
+            this.collisionX -= Math.cos(this.angle) * this.speedX
+            this.collisionY -= Math.sin(this.angle) * this.speedY
 
+            if (this.radius > 0.1){
+                this.radius -= 0.05
+            } else{
+                this.markedForDeletion = true
+                this.game.removeGameObjects()
+            }
         }
     }
 
@@ -499,8 +513,8 @@ window.addEventListener("load", function () {
             context.save()
             context.textAlign = "left"
             context.fillText(`Score : ${this.score}`, 25, 50)
-            if(this.debug){
-                context.fillText(`Lost Larva : ${this.lostHatchlings}`,25, 100)
+            if (this.debug) {
+                context.fillText(`Lost Larva : ${this.lostHatchlings}`, 25, 100)
             }
             context.restore()
         }
