@@ -9,6 +9,9 @@ window.addEventListener("load", function(){
     ctx.lineWidth = 3;
     ctx.strokeStyle = "white"
 
+    ctx.font = "40px Helvetica"
+    ctx.textAlign = "center"
+
     this.document.getElementById("overlay").width = canvas.width
 
     class Player {
@@ -166,6 +169,10 @@ window.addEventListener("load", function(){
             this.height = this.spriteHeight
             this.spriteX = this.collisionX - this.width * 0.5
             this.spriteY = this.collisionY - this.height * 0.5 - 30
+
+            this.hatchTimer = 0
+            this.hatchInterval = 3000
+            this.markedForDeletion = false
         }
 
         draw(context){
@@ -179,15 +186,19 @@ window.addEventListener("load", function(){
                 context.fill()
                 context.restore()
                 context.stroke()
+                // draw timer over eggs 
+                const displayTimer = (this.hatchTimer / 1000).toFixed()
+                context.fillText(displayTimer, this.collisionX, this.collisionY - this.collisionRadius * 2.5)
             }
         }
 
-        update(){
+        update(deltaTime){
             this.spriteX = this.collisionX - this.width * 0.5
             this.spriteY = this.collisionY - this.height * 0.5 - 30
 
             let collisionObjects = [this.game.player, ...this.game.obstacles, ...this.game.enemies]
 
+            // collision detection here 
             collisionObjects.forEach(object => {
                 let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, object)
                 if(collision){
@@ -199,6 +210,63 @@ window.addEventListener("load", function(){
 
                 }
             })
+
+            // hatching 
+            if (this.hatchTimer > this.hatchInterval){
+                this.markedForDeletion = true
+                this.game.removeGameObjects()
+                
+                this.game.hatchligns.push(new Larva(this.game, this.collisionX, this.collisionY))
+            }
+            else{
+                this.hatchTimer += deltaTime
+            }
+            
+        }
+    }
+
+    class Larva{
+        constructor(game, x, y){
+            this.game = game
+            this.collisionX = x
+            this.collisionY = y
+            this.collisionRadius = 30
+            this.image = document.getElementById("larva")
+
+            this.spriteWidth = 150
+            this.spriteHeight = 150
+            this.width = this.spriteWidth
+            this.height = this.spriteWidth
+            this.spriteX = this.collisionX - this.width * 0.5
+            this.spriteY = this.collisionY - this.height * 0.5 - 30
+
+
+            this.speedY = 1 + Math.random()
+        }
+
+        draw(context){
+            context.drawImage(this.image, 0, 0, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height)
+
+            if (this.game.debug){
+                context.beginPath();
+                context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
+                context.save() // anything between save and restore will not affect other sector to cavnas drow, like, fill will be affected but stroke will not 
+                context.globalAlpha = 0.8
+                context.fill()
+                context.restore()
+                context.stroke()
+            }
+        }
+
+        update(){
+            this.collisionY -= this.speedY
+            this.spriteX = this.collisionX - this.width * 0.5
+            this.spriteY = this.collisionY - this.height * 0.5 -30
+
+            if (this.collisionY < this.game.topmargin - 0){
+                this.markedForDeletion = true
+                this.game.removeGameObjects()
+            }
         }
     }
 
@@ -216,7 +284,7 @@ window.addEventListener("load", function(){
             this.spriteX 
             this.spriteY
 
-            this.collisionX = this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
+            this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
             this.collisionY = this.game.topmargin + Math.random() * (this.game.height - this.game.topmargin)
         }
 
@@ -284,7 +352,9 @@ window.addEventListener("load", function(){
             this.eggTimer = 0
             this.eggInterval = 500
             this.eggs = []
-            this.maxEggs = 10
+            this.maxEggs = 5
+
+            this.hatchligns = []
 
             this.maxEnemy = 5
             this.enemies = []
@@ -323,17 +393,17 @@ window.addEventListener("load", function(){
                 if (e.key == "d") this.debug = !this.debug
             })
         }
-        // render a player 
+        // render 
         render(context, deltaTime){  
             // the main render fucntion to render according to fps 
             if (this.timer > this.interval){
                 context.clearRect(0, 0, this.width, this.height)
-                this.gameObjects = [this.player, ...this.obstacles, ...this.eggs, ...this.enemies]
+                this.gameObjects = [this.player, ...this.obstacles, ...this.eggs, ...this.enemies, ...this.hatchligns]
                 // sort array by vertical position as drawn first go back
                 this.gameObjects.sort((a, b)=>a.collisionY - b.collisionY)
                 this.gameObjects.forEach( object=>{
                     object.draw(context)
-                    object.update()
+                    object.update(deltaTime)
                 })
                 this.timer = 0
             }
@@ -363,6 +433,11 @@ window.addEventListener("load", function(){
 
         addEnemy(){
             this.enemies.push(new Enemy(this))
+        }
+
+        removeGameObjects(){
+            this.eggs = this.eggs.filter(object => !object.markedForDeletion)
+            this.hatchligns = this.hatchligns.filter(object => !object.markedForDeletion)
         }
 
         init(){
