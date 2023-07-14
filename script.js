@@ -311,7 +311,7 @@ window.addEventListener("load", function () {
             this.collisionRadius = 40
             this.speedX = Math.random() * 3 + 0.5
 
-            this.image = document.getElementById("toad")
+            this.image = document.getElementById("toads")
             this.spriteWidth = 140
             this.spriteHeight = 260
             this.width = this.spriteWidth
@@ -319,12 +319,15 @@ window.addEventListener("load", function () {
             this.spriteX
             this.spriteY
 
+            this.frameX = 0
+            this.frameY = Math.floor(Math.random() * 4) * this.spriteHeight
+
             this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
             this.collisionY = this.game.topmargin + Math.random() * (this.game.height - this.game.topmargin)
         }
 
         draw(context) {
-            context.drawImage(this.image, this.spriteX, this.spriteY)
+            context.drawImage(this.image, this.frameX, this.frameY, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height)
 
             if (this.game.debug) {
                 context.beginPath();
@@ -343,11 +346,13 @@ window.addEventListener("load", function () {
 
             this.collisionX -= this.speedX
 
-            // when passes right side of screen , regenerate from left side of the screen 
+            // when passes left side of screen , regenerate from right side of the screen 
             if (this.spriteX + this.width < 0) {
                 this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
 
                 this.collisionY = this.game.topmargin + Math.random() * (this.game.height - this.game.topmargin)
+
+                this.frameY = Math.floor(Math.random() * 4) * this.spriteHeight
             }
 
             // collision detection 
