@@ -9,7 +9,7 @@ window.addEventListener("load", function () {
     ctx.lineWidth = 3;
     ctx.strokeStyle = "black"
 
-    ctx.font = "40px Helvetica"
+    ctx.font = "40px Bangers"
     ctx.textAlign = "center"
 
     this.document.getElementById("overlay").width = canvas.width
@@ -539,6 +539,9 @@ window.addEventListener("load", function () {
                 
                 context.fillStyle = "white"
                 context.textAlign = "center"
+                context.shadowOffsetX = 4
+                context.shadowOffsetY = 5
+                context.shadowColor = "yellow"
 
                 let message1
                 let message2
@@ -550,9 +553,11 @@ window.addEventListener("load", function () {
                     message2 = "You lost " + this.lostHatchlings  + " Hachlinks"
                 }
 
-                context.font = "130px Helvetica"
+                context.font = "130px Bangers"
                 context.fillText(message1, this.width * 0.5, this.height * 0.5 -20)
-                context.font = "40px Helvetica"
+                context.restore()
+                context.save()
+                context.font = "40px Bangers"
                 context.fillText(message2, this.width * 0.5, this.height * 0.5 + 30)
                 context.fillText("Final Score : " + this.score + ". Press 'R' to restart !", this.width * 0.5, this.height * 0.5 + 80)
 
