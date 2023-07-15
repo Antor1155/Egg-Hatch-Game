@@ -16,6 +16,7 @@
 ## Technical Abilities
 * Responsive to differnt Screen ratio.
 * On all devices play on 70 FPS, so look and feels same everywhere.
+* optimized for better performence and usability.
 * Adjust width and Height According to the display size.
 * keep aspect ratio and don't work on portrait mood.
 * Loading state so, game after loading can be played properly.
