@@ -9,7 +9,7 @@ window.addEventListener("load", function () {
     overlay.width = canvas.width
     // making dynamic height and width 
     function windowResized() {
-        const windowHeight = this.window.innerHeight - 10
+        const windowHeight = this.window.innerHeight - 15
         if (windowHeight < canvas.height) {
             const difference = canvas.height - windowHeight
             const newHeight = canvas.height - difference
@@ -578,7 +578,7 @@ window.addEventListener("load", function () {
                         message1 = "BullsEye !!!"
                         message2 = "You bullied the bullies !"
                     } else {
-                        message1 = "Bullocks !"
+                        message1 = "Bullocks ??"
                         message2 = "You lost " + this.lostHatchlings + " Hachlinks"
                     }
 
@@ -683,17 +683,24 @@ window.addEventListener("load", function () {
     const game = new Game(canvas)
     game.init()
 
-    // infinite loop of animation function 
-    let lastTime = 0
-    function animation(timeStamp) {
-        const deltaTime = timeStamp - lastTime
-        lastTime = timeStamp
+    this.document.getElementById("startBtn").onclick = handleStart
 
-        // ctx.clearRect(0, 0, canvas.width, canvas.height)
-        game.render(ctx, deltaTime)
-
-        requestAnimationFrame(animation)
+    // on clicking star button start the game 
+    function handleStart(){
+        document.getElementById("instructionSection").style.display = "none"
+        console.log("hello")
+        // infinite loop of animation function 
+        let lastTime = 0
+        function animation(timeStamp) {
+            const deltaTime = timeStamp - lastTime
+            lastTime = timeStamp
+            
+            // ctx.clearRect(0, 0, canvas.width, canvas.height)
+            game.render(ctx, deltaTime)
+            requestAnimationFrame(animation)
+        }
+        animation(0)
     }
+    
 
-    animation(0)
 })
