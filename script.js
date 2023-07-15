@@ -18,8 +18,6 @@ window.addEventListener("load", function () {
 
             canvas.style.transform = `translate(-50%, -50%) scale(${newHeightScale})`
             overlay.style.transform = `translate(-50%, -50%) scale(${newHeightScale})`
-
-            console.log("difference:", difference, " newHeight: ", newHeight, newHeightScale)
         }
     }
 
@@ -488,7 +486,7 @@ window.addEventListener("load", function () {
             this.score = 0
             this.lostHatchlings = 0
 
-            this.winningScore = 50
+            this.winningScore = 30
             this.loosingScore = 10
 
             this.mouse = {
@@ -560,7 +558,7 @@ window.addEventListener("load", function () {
                 context.restore()
 
                 // winning and loosing message 
-                if (this.score >= this.winningScore) {
+                if (this.score >= this.winningScore || this.lostHatchlings >= this.loosingScore) {
                     this.gameOver = true
                     context.save()
                     context.fillStyle = "rgba(0, 0, 0, 0.5)"
@@ -574,7 +572,7 @@ window.addEventListener("load", function () {
 
                     let message1
                     let message2
-                    if (this.lostHatchlings <= this.loosingScore) {
+                    if (this.lostHatchlings < this.loosingScore) {
                         message1 = "BullsEye !!!"
                         message2 = "You bullied the bullies !"
                     } else {
@@ -683,12 +681,10 @@ window.addEventListener("load", function () {
     const game = new Game(canvas)
     game.init()
 
-    this.document.getElementById("startBtn").onclick = handleStart
-
     // on clicking star button start the game 
+    this.document.getElementById("startBtn").onclick = handleStart
     function handleStart(){
         document.getElementById("instructionSection").style.display = "none"
-        console.log("hello")
         // infinite loop of animation function 
         let lastTime = 0
         function animation(timeStamp) {
