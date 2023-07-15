@@ -22,7 +22,8 @@ window.addEventListener("load", function () {
     }
 
     windowResized()
-    this.window.addEventListener("resize", windowResized)
+    window.addEventListener("resize", windowResized)
+    window.addEventListener("rotate", windowResized)
 
 
     ctx.fillStyle = "white"

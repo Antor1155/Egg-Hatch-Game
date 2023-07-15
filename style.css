@@ -1,15 +1,15 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Bangers', cursive;
 }
 
-body{
+body {
     background-color: rgb(20, 24, 20);
 }
 
-#canvas1{
+#canvas1 {
     background: url("all_project_images/background.png");
     position: absolute;
     top: 50%;
@@ -17,7 +17,7 @@ body{
     border: 3px solid black;
 }
 
-#overlay{
+#overlay {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -26,11 +26,11 @@ body{
 }
 
 /* images to load and draw in canvas  */
-#obstacles, #bull, #egg, #toad, #larva, #toads{
+#obstacles, #bull, #egg, #toad, #larva, #toads {
     display: none;
 }
 
-#instructionSection{
+#instructionSection {
     position: relative;
     z-index: 2;
     background-color: rgba(0, 0, 0, 0.505);
@@ -42,7 +42,7 @@ body{
     align-items: center;
 }
 
-#instructions{
+#instructions {
     background-color: rgba(24, 23, 23, 0.731);
     margin: auto;
     width: 60%;
@@ -52,27 +52,27 @@ body{
     letter-spacing: 2px;
 }
 
-#instructions h1{
+#instructions h1 {
     text-align: center;
     margin-bottom: 2vh;
 }
 
-#instructions > div:not(#texts){
+#instructions>div:not(#texts) {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
     padding-left: 20px;
 }
 
-#texts{
+#texts {
     padding-left: calc(70px + 2vw);
 }
 
-#instructions div:nth-child(odd){
+#instructions div:nth-child(odd) {
     background-color: black;
 }
 
-#instructions div img{
+#instructions div img {
     width: 50px;
     height: 50px;
     /* background-color: blue; */
@@ -81,7 +81,7 @@ body{
 }
 
 
-#startBtn{
+#startBtn {
     display: block;
     margin: auto;
     margin-top: 15px;
@@ -91,24 +91,34 @@ body{
 
 }
 
-#portraitWarning{
-    display: none; 
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    color: aliceblue;
-    background-color: red;
-    z-index: 5;
+#portraitWarning {
+    display: none;
 }
 
 @media (orientation: portrait) {
-    #portraitWarning{
+
+    #canvas1, #overlay, #instructionSection {
+        display: none;
+    }
+
+    #portraitWarning {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        color: aliceblue;
+        background-color: red;
+        z-index: 5;
+
         display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
         font-size: 15vw;
+    }
+
+    #portraitWarning small{
+        font-size: 3rem;
     }
 }
