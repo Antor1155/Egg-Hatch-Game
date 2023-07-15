@@ -5,14 +5,36 @@ window.addEventListener("load", function () {
     canvas.width = 1280
     canvas.height = 720
 
+    const overlay = this.document.getElementById("overlay")
+    overlay.width = canvas.width
+    // making dynamic height and width 
+    function windowResized (){
+        const windowHeight = this.window.innerHeight -10
+        if (windowHeight < canvas.height){
+            const difference = canvas.height - windowHeight
+            const newHeight = canvas.height - difference
+            
+            const newHeightScale = (newHeight / canvas.height).toFixed(2)
+            
+            canvas.style.transform = `translate(-50%, -50%) scale(${newHeightScale})`
+            overlay.style.transform = `translate(-50%, -50%) scale(${newHeightScale})`
+            
+            console.log("difference:", difference, " newHeight: ", newHeight,  newHeightScale)
+        }
+    }
+
+    windowResized()
+    this.window.addEventListener("resize", windowResized)
+
+
+
+
     ctx.fillStyle = "white"
     ctx.lineWidth = 3;
     ctx.strokeStyle = "black"
 
     ctx.font = "40px Bangers"
     ctx.textAlign = "center"
-
-    this.document.getElementById("overlay").width = canvas.width
 
     class Player {
         constructor(game) {
