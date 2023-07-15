@@ -222,7 +222,7 @@ window.addEventListener("load", function () {
                 this.markedForDeletion = true
                 this.game.removeGameObjects()
 
-                this.game.hatchligns.push(new Larva(this.game, this.collisionX, this.collisionY))
+                this.game.hatchlings.push(new Larva(this.game, this.collisionX, this.collisionY))
             }
             else {
                 this.hatchTimer += deltaTime
@@ -440,7 +440,7 @@ window.addEventListener("load", function () {
             this.height = this.canvas.height
             this.topmargin = 240
 
-            this.debug = true
+            this.debug = false
             this.fps = 70
             this.timer = 0
             this.interval = 1000 / this.fps
@@ -456,7 +456,7 @@ window.addEventListener("load", function () {
             this.eggs = []
             this.maxEggs = 5
 
-            this.hatchligns = []
+            this.hatchlings = []
 
             this.maxEnemy = 5
             this.enemies = []
@@ -468,7 +468,7 @@ window.addEventListener("load", function () {
 
             this.particles = []
 
-            this.winningScore = 5
+            this.winningScore = 1
             this.loosingScore = 5
 
             this.mouse = {
@@ -511,7 +511,7 @@ window.addEventListener("load", function () {
             // the main render fucntion to render according to fps 
             if (this.timer > this.interval) {
                 context.clearRect(0, 0, this.width, this.height)
-                this.gameObjects = [this.player, ...this.obstacles, ...this.eggs, ...this.enemies, ...this.hatchligns, ...this.particles]
+                this.gameObjects = [this.player, ...this.obstacles, ...this.eggs, ...this.enemies, ...this.hatchlings, ...this.particles]
 
                 // sort array by vertical position as drawn first go back
                 this.gameObjects.sort((a, b) => a.collisionY - b.collisionY)
@@ -596,7 +596,7 @@ window.addEventListener("load", function () {
 
         removeGameObjects() {
             this.eggs = this.eggs.filter(object => !object.markedForDeletion)
-            this.hatchligns = this.hatchligns.filter(object => !object.markedForDeletion)
+            this.hatchlings = this.hatchlings.filter(object => !object.markedForDeletion)
             this.particles = this.particles.filter(object => !object.markedForDeletion)
 
         }
