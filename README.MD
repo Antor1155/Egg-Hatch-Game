@@ -23,6 +23,8 @@
 * Class and Class extends are used to reduce unnecessary code and extend reusability.
 * Restart game on Keyboard "R" button
 * See underlying functionality by pressing keyboard "D" button
+* Radnomize enemy image and Enemy speed
+* Randomize Eggs location
 
 
 ## Art and design
