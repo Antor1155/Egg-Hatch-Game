@@ -16,11 +16,11 @@ window.addEventListener("load", function () {
         if (window.innerWidth > window.innerHeight) {
             canvas.style.display = "block"
             overlay.style.display = "block"
-        } else{
+        } else {
             canvas.style.display = "none"
             overlay.style.display = "none"
         }
-        
+
         // making dynamic height and width 
         const windowHeight = this.window.innerHeight - 15
         if (windowHeight < canvas.height) {
@@ -510,24 +510,28 @@ window.addEventListener("load", function () {
             }
 
             // any normal code here 
-            canvas.addEventListener("mousedown", e => {
-                this.mouse.x = e.offsetX
-                this.mouse.y = e.offsetY
-                this.mouse.pressed = true
+            // canvas.addEventListener("mousedown", e => {
+            //     this.mouse.x = e.offsetX
+            //     this.mouse.y = e.offsetY
+            //     this.mouse.pressed = true
 
-            })
+            // })
 
-            canvas.addEventListener("mouseup", e => {
-                this.mouse.x = e.offsetX
-                this.mouse.y = e.offsetY
-                this.mouse.pressed = false
-            })
+            // canvas.addEventListener("mouseup", e => {
+            //     this.mouse.x = e.offsetX
+            //     this.mouse.y = e.offsetY
+            //     this.mouse.pressed = false
+            // })
 
+            // canvas.addEventListener("mousemove", e => {
+            //     if (this.mouse.pressed) {
+            //         this.mouse.x = e.offsetX
+            //         this.mouse.y = e.offsetY
+            //     }
+            // })
             canvas.addEventListener("mousemove", e => {
-                if (this.mouse.pressed) {
-                    this.mouse.x = e.offsetX
-                    this.mouse.y = e.offsetY
-                }
+                this.mouse.x = e.offsetX
+                this.mouse.y = e.offsetY
             })
 
             // debug mode to see collision are for obstacles 
