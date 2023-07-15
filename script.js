@@ -7,8 +7,21 @@ window.addEventListener("load", function () {
 
     const overlay = this.document.getElementById("overlay")
     overlay.width = canvas.width
-    // making dynamic height and width 
+
+
+    this.document.getElementById("startBtn").innerText = "START"
+
     function windowResized() {
+        // in portrait mode, keepinng the canvas hidden 
+        if (window.innerWidth > window.innerHeight) {
+            canvas.style.display = "block"
+            overlay.style.display = "block"
+        } else{
+            canvas.style.display = "none"
+            overlay.style.display = "none"
+        }
+        
+        // making dynamic height and width 
         const windowHeight = this.window.innerHeight - 15
         if (windowHeight < canvas.height) {
             const difference = canvas.height - windowHeight
@@ -684,20 +697,20 @@ window.addEventListener("load", function () {
 
     // on clicking star button start the game 
     this.document.getElementById("startBtn").onclick = handleStart
-    function handleStart(){
+    function handleStart() {
         document.getElementById("instructionSection").style.display = "none"
         // infinite loop of animation function 
         let lastTime = 0
         function animation(timeStamp) {
             const deltaTime = timeStamp - lastTime
             lastTime = timeStamp
-            
+
             // ctx.clearRect(0, 0, canvas.width, canvas.height)
             game.render(ctx, deltaTime)
             requestAnimationFrame(animation)
         }
         animation(0)
     }
-    
+
 
 })
