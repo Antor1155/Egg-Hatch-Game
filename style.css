@@ -4,11 +4,17 @@
     box-sizing: border-box;
     font-family: 'Bangers', cursive;
 }
+
+body{
+    background-color: rgb(61, 130, 61);
+}
+
 #canvas1{
     background: url("all_project_images/background.png");
     position: absolute;
     top: 50%;
     left: 50%;
+    border: 3px solid black;
 }
 
 #overlay{

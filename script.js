@@ -485,12 +485,12 @@ window.addEventListener("load", function () {
 
             this.gameObjects = []
 
+            this.particles = []
+
             this.score = 0
             this.lostHatchlings = 0
 
-            this.particles = []
-
-            this.winningScore = 1
+            this.winningScore = 500
             this.loosingScore = 5
 
             this.mouse = {
