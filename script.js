@@ -8,25 +8,23 @@ window.addEventListener("load", function () {
     const overlay = this.document.getElementById("overlay")
     overlay.width = canvas.width
     // making dynamic height and width 
-    function windowResized (){
-        const windowHeight = this.window.innerHeight -10
-        if (windowHeight < canvas.height){
+    function windowResized() {
+        const windowHeight = this.window.innerHeight - 10
+        if (windowHeight < canvas.height) {
             const difference = canvas.height - windowHeight
             const newHeight = canvas.height - difference
-            
+
             const newHeightScale = (newHeight / canvas.height).toFixed(2)
-            
+
             canvas.style.transform = `translate(-50%, -50%) scale(${newHeightScale})`
             overlay.style.transform = `translate(-50%, -50%) scale(${newHeightScale})`
-            
-            console.log("difference:", difference, " newHeight: ", newHeight,  newHeightScale)
+
+            console.log("difference:", difference, " newHeight: ", newHeight, newHeightScale)
         }
     }
 
     windowResized()
     this.window.addEventListener("resize", windowResized)
-
-
 
 
     ctx.fillStyle = "white"
@@ -490,8 +488,8 @@ window.addEventListener("load", function () {
             this.score = 0
             this.lostHatchlings = 0
 
-            this.winningScore = 500
-            this.loosingScore = 5
+            this.winningScore = 50
+            this.loosingScore = 10
 
             this.mouse = {
                 x: this.width * 0.5,
@@ -545,11 +543,20 @@ window.addEventListener("load", function () {
 
                 // draw status text 
                 context.save()
+                context.fillStyle = "rgba(0, 0, 0, 0.8)"
+                context.fillRect(0, 0, this.width, 70)
+
+                context.fillStyle = "white"
                 context.textAlign = "left"
                 context.fillText(`Score : ${this.score}`, 25, 50)
-                if (this.debug) {
-                    context.fillText(`Lost Larva : ${this.lostHatchlings}`, 25, 100)
-                }
+
+                context.font = "20px Bangers"
+
+                context.fillText(`Lost Larva : ${this.lostHatchlings}`, 200, 45)
+
+                context.fillText("press 'R' to restart", 450, 45)
+                context.fillText("press 'D' for developer mood", 650, 45)
+                context.fillText("win AT: " + this.winningScore, 1170, 45)
                 context.restore()
 
                 // winning and loosing message 
