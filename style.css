@@ -90,3 +90,25 @@ body{
     font-size: 20px;
 
 }
+
+#portraitWarning{
+    display: none; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    color: aliceblue;
+    background-color: red;
+    z-index: 5;
+}
+
+@media (orientation: portrait) {
+    #portraitWarning{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 15vw;
+    }
+}
