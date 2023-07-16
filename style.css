@@ -30,7 +30,7 @@ body {
 }
 
 /* images to load and draw in canvas  */
-#obstacles, #bull, #egg, #toad, #larva, #toads {
+#obstacles,#bull,  #egg, #toad, #larva, #toads {
     display: none;
 }
 

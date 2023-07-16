@@ -48,6 +48,7 @@ window.addEventListener("load", function () {
 
     class Player {
         constructor(game) {
+            console.log(this)
             this.game = game
             this.collisionX = this.game.width * 0.5;
             this.collisionY = this.game.height * 0.5;
@@ -158,6 +159,7 @@ window.addEventListener("load", function () {
 
     class Obstacle {
         constructor(game) {
+            console.log(this)
             this.game = game
             this.collisionX = Math.random() * this.game.width
             this.collisionY = Math.random() * this.game.height
@@ -189,12 +191,13 @@ window.addEventListener("load", function () {
         }
 
         update() {
-
+            // obstacle have no update as they are static 
         }
     }
 
     class Egg {
         constructor(game) {
+            console.log(this)
             this.game = game
             this.collisionRadius = 40
             this.margin = this.collisionRadius * 2
@@ -265,6 +268,7 @@ window.addEventListener("load", function () {
 
     class Larva {
         constructor(game, x, y) {
+            console.log(this)
             this.game = game
             this.collisionX = x
             this.collisionY = y
@@ -348,6 +352,7 @@ window.addEventListener("load", function () {
 
     class Enemy {
         constructor(game) {
+            console.log(this)
             this.game = game
             this.collisionRadius = 40
             this.speedX = Math.random() * 3 + 0.5
@@ -415,6 +420,7 @@ window.addEventListener("load", function () {
 
     class Particle {
         constructor(game, x, y, color) {
+            console.log(this)
             this.game = game
             this.collisionX = x
             this.collisionY = y
@@ -467,6 +473,7 @@ window.addEventListener("load", function () {
 
     class Game {
         constructor(canvas) {
+            console.log(this)
             this.canvas = canvas
             this.width = this.canvas.width
             this.height = this.canvas.height
