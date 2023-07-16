@@ -1,5 +1,5 @@
 # [Egg hatcher --by 'Md Antor'](https://egg-protector-by-antor.netlify.app/) 
-## is an Web based game where you save hatched larva from Toad Enemies
+## It's a Web based game where you save hatched larva from Toad Enemies
 
 <div display="flex" align="center">
 <img src="all_project_images/screenShot/play.png" height="300" >

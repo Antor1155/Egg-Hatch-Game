@@ -536,8 +536,8 @@ window.addEventListener("load", function () {
 
             // debug mode to see collision are for obstacles 
             window.addEventListener("keydown", e => {
-                if (e.key == "d") this.debug = !this.debug
-                else if (e.key == "r") {
+                if (e.key.toLowerCase() == "d") this.debug = !this.debug
+                else if (e.key.toLowerCase() == "r") {
                     this.restart()
                 }
             })
